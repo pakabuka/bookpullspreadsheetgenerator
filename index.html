@@ -475,7 +475,7 @@ select.tableInput { width: 100%; }
       <p>
         This tool splits footnotes into individual sources (e.g., <span class="mono">2.1</span>, <span class="mono">2.2</span>),
         assigns pullers in contiguous blocks, extracts any URL found in each source line, and exports an Excel-ready sheet.
-        If the first blocks start with <span class="mono">*</span> (e.g., author notes), they’re labeled <span class="mono">author info</span> and do not affect numbering.
+        
       </p>
     </div>
 
@@ -537,7 +537,7 @@ select.tableInput { width: 100%; }
 
               <div class="twoCol" style="margin-top: 12px;">
                 <div class="checkbox">
-                  <input id="skipIdIbid" type="checkbox" checked />
+                  <input id="skipIdIbid" type="checkbox" unchecked />
                   <span>Skip footnotes that are only Id./Ibid.</span>
                 </div>
                 <div>
@@ -675,7 +675,7 @@ select.tableInput { width: 100%; }
       <p><strong>No Data Collection:</strong> This tool runs entirely client-side (in your browser). We do not collect, store, or transmit your data to any server.</p>
       <p><strong>Local Processing:</strong> Pasted text and uploaded <span class="mono">.docx</span> files are processed locally in your browser memory. Exports (<span class="mono">.xls</span>, <span class="mono">.csv</span>, copy/TSV) are generated locally.</p>
       <p><strong>No Tracking:</strong> No analytics, cookies, or tracking scripts are included.</p>
-      <p>If you have questions, contact Frederick Liu at <a href="mailto:frederick.liu@yale.edu">frederick.liu@yale.edu</a>.</p>
+      <p>If you have questions, contact the developer Frederick Liu at <a href="mailto:frederick.liu@yale.edu">frederick.liu@yale.edu</a>.</p>
       <button id="privacyBtnClose" class="btn secondary" style="width:100%; margin-top:10px;" type="button">Close</button>
     </div>
   </div>
