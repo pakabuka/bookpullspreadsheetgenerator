@@ -1,0 +1,1705 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>Bookpull Spreadsheet Generator</title>
+  <style>
+    :root{
+      --yale-blue:#00356B;
+      --yale-accent:#286f9b;
+      --text-main:#222;
+      --text-muted:#5f5f5f;
+      --bg-body:#F9F9F9;
+      --bg-card:#FFF;
+      --border-color:#ddd;
+
+      --serif:"YaleNew","Georgia","Times New Roman",serif;
+      --sans:"Mallory","Helvetica Neue",Helvetica,Arial,sans-serif;
+      --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+
+      --radius:3px;
+      --shadow:0 1px 3px rgba(0,0,0,0.05);
+
+      --yes-bg:#e6fffa;
+      --no-bg:#fff5f5;
+      --warn-bg:#eff6ff;
+
+      --chip-bg:#eaf2ff;
+      --chip-bd:#bfdbfe;
+      --chip-tx:#1e40af;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg-body);
+      color:var(--text-main);
+      font-family:var(--sans);
+      -webkit-font-smoothing:antialiased;
+      line-height:1.5;
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+    a{color:var(--yale-blue);text-decoration:none;font-weight:600}
+    a:hover{text-decoration:underline}
+
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      background:var(--yale-blue);
+      color:#fff;
+      border-bottom:4px solid #fff;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+    .brand{
+      height:70px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+    .brandLeft h1{
+      font-family:var(--serif);
+      font-weight:400;
+      font-size:24px;
+      margin:0;
+      letter-spacing:.5px;
+      color:#fff;
+    }
+    .brandLeft .sub{
+      font-family:var(--sans);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      opacity:.85;
+      margin-top:2px;
+    }
+
+    main.wrap{padding-top:40px;padding-bottom:60px;flex:1}
+
+    .hero{margin-bottom:30px;border-bottom:1px solid var(--border-color);padding-bottom:20px}
+    .hero h2{
+      font-family:var(--serif);
+      font-size:32px;
+      color:var(--text-main);
+      margin:0 0 10px 0;
+      font-weight:400;
+    }
+    .hero p{
+      font-family:var(--serif);
+      font-size:18px;
+      color:var(--text-muted);
+      margin:0;
+      max-width:900px;
+      line-height:1.6;
+    }
+
+    /* Step 1 wider, Step 2 narrower */
+    .grid{display:grid;grid-template-columns:1fr;gap:25px}
+    @media(min-width:900px){
+      .grid{grid-template-columns:1.35fr 0.65fr}
+    }
+
+    .card{
+      background:var(--bg-card);
+      border:1px solid var(--border-color);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      position:relative;
+      animation:fadeIn .35s ease-out;
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+    .cardHeader{
+      padding:15px 20px;
+      background:#fdfdfd;
+      border-bottom:1px solid var(--border-color);
+    }
+    .cardHeader h3{
+      margin:0;
+      font-family:var(--sans);
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:var(--yale-blue);
+      font-weight:700;
+    }
+    .cardHeader .hint{font-size:13px;color:var(--text-muted);margin-top:4px}
+    .cardBody{padding:20px}
+
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      color:var(--text-muted);
+      margin-bottom:6px;
+    }
+
+    input,textarea,select{
+      width:100%;
+      padding:10px;
+      font-size:15px;
+      font-family:var(--sans);
+      border:1px solid #ccc;
+      border-radius:var(--radius);
+      background:#fff;
+      color:#333;
+      transition:all .2s;
+    }
+    input:focus,textarea:focus,select:focus{
+      outline:none;
+      border-color:var(--yale-blue);
+      box-shadow:0 0 0 3px rgba(0,53,107,.1);
+    }
+    textarea{min-height:180px;font-family:var(--mono);font-size:13px}
+
+    .row{display:flex;gap:10px;align-items:center}
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+    @media(max-width:600px){.twoCol{grid-template-columns:1fr}}
+
+    .tabs{
+      display:flex;
+      border-bottom:1px solid var(--border-color);
+      margin-bottom:15px;
+    }
+    .tab{
+      background:transparent;
+      border:none;
+      border-bottom:3px solid transparent;
+      padding:10px 15px;
+      font-family:var(--sans);
+      font-size:14px;
+      font-weight:600;
+      color:var(--text-muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .tab:hover{color:var(--yale-blue)}
+    .tab.active{color:var(--yale-blue);border-bottom-color:var(--yale-blue)}
+
+    .btn{
+      display:inline-block;
+      padding:10px 18px;
+      font-size:14px;
+      font-weight:600;
+      text-align:center;
+      cursor:pointer;
+      border-radius:var(--radius);
+      transition:background .2s,opacity .2s;
+      font-family:var(--sans);
+    }
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.primary{background:var(--yale-blue);color:#fff;border:1px solid var(--yale-blue)}
+    .btn.primary:hover:not(:disabled){background:#002040}
+    .btn.secondary{background:#fff;color:var(--yale-blue);border:1px solid #ccc}
+    .btn.secondary:hover:not(:disabled){background:#f4f4f4;border-color:var(--yale-blue)}
+    .btn.auto{width:auto}
+
+    .small{font-size:12px;color:var(--text-muted);margin-top:6px}
+    .mono{font-family:var(--mono)}
+    .note{
+      background:#f2f7fc;
+      border-left:3px solid var(--yale-blue);
+      padding:10px 15px;
+      font-size:13px;
+      color:#333;
+      margin-top:15px;
+    }
+    .status{
+      margin-top:15px;
+      padding:15px;
+      background:#eee;
+      border:1px solid #ddd;
+      font-family:var(--mono);
+      font-size:12px;
+      color:#333;
+      border-radius:var(--radius);
+      white-space:pre-wrap;
+    }
+    .checkbox{display:flex;align-items:center;gap:8px;padding:8px 0}
+    .checkbox input{width:auto;margin:0}
+    .checkbox span{font-size:14px}
+
+    .tableWrap{overflow-x:auto;border:1px solid var(--border-color);border-radius:var(--radius)}
+    table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+    thead th{
+      background:#f8f8f8;
+      color:#333;
+      font-weight:700;
+      text-align:left;
+      padding:12px;
+      border-bottom:2px solid #ddd;
+      font-family:var(--sans);
+      white-space:nowrap;
+    }
+    tbody td{
+      padding:8px 12px;
+      border-bottom:1px solid #eee;
+      vertical-align:top;
+      color:#444;
+    }
+    tbody tr:last-child td{border-bottom:none}
+
+    /* Wider Pulled / Puller columns so selects don't get squeezed */
+th.pulledCol, td.pulledCell { width: 170px; min-width: 170px; }
+th.pullerCol, td.pullerCell { width: 260px; min-width: 260px; }
+
+/* Ensure dropdowns have enough room */
+td.pulledCell select.tableInput { min-width: 150px; }
+td.pullerCell select.tableInput { min-width: 220px; }
+select.tableInput { width: 100%; }
+
+    .tableInput{
+      width:100%;
+      border:1px solid transparent;
+      background:transparent;
+      padding:6px 6px;
+      font-family:var(--sans);
+      font-size:13px;
+      color:#333;
+      border-radius:2px;
+      transition:all .2s;
+    }
+    .tableInput:hover{background:#fdfdfd;border-color:#eee}
+    .tableInput:focus{
+      background:#fff;
+      border-color:var(--yale-blue);
+      outline:none;
+      box-shadow:0 0 0 2px rgba(0,53,107,.1);
+    }
+
+    
+    .tag{
+      display:inline-block;
+      padding:2px 6px;
+      border-radius:2px;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+    .tag.ok{background:var(--yes-bg);color:#047857;border:1px solid #a7f3d0}
+    .tag.bad{background:var(--no-bg);color:#b91c1c;border:1px solid #fecaca}
+    .tag.mid{background:var(--warn-bg);color:#1e40af;border:1px solid #bfdbfe}
+    tr.row-yes td{background:rgba(230,255,250,.55)}
+    tr.row-no td{background:rgba(255,245,245,.65)}
+
+    .kbd{
+      font-family:var(--mono);
+      font-size:11px;
+      padding:1px 6px;
+      border:1px solid #ddd;
+      border-bottom-width:2px;
+      border-radius:4px;
+      background:#fff;
+      color:#444;
+    }
+
+    /* Scholastica-style puller chips */
+    .tagInputWrap{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      padding:8px;
+      border:1px solid #ccc;
+      border-radius:var(--radius);
+      background:#fff;
+      transition:box-shadow .2s,border-color .2s;
+      min-height:44px;
+    }
+    .tagInputWrap:focus-within{
+      border-color:var(--yale-blue);
+      box-shadow:0 0 0 3px rgba(0,53,107,.1);
+    }
+    @keyframes popIn{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--chip-bg);
+      border:1px solid var(--chip-bd);
+      color:var(--chip-tx);
+      font-size:13px;
+      font-weight:700;
+      animation:popIn .18s ease-out;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .chip button{
+      border:none;
+      background:rgba(30,64,175,.08);
+      color:var(--chip-tx);
+      font-weight:900;
+      cursor:pointer;
+      border-radius:999px;
+      width:20px;
+      height:20px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+      line-height:1;
+      transition:background .15s;
+    }
+    .chip button:hover{background:rgba(30,64,175,.16)}
+    .tagTextInput{
+      border:none;
+      outline:none;
+      min-width:180px;
+      flex:1;
+      padding:6px 6px;
+      font-size:14px;
+      font-family:var(--sans);
+      background:transparent;
+      color:#333;
+    }
+    .tagTextInput::placeholder{color:#888}
+
+    /* URL cell */
+    .urlCell{display:flex;align-items:center;gap:8px}
+    .urlArrow{
+      font-size:14px;
+      color:var(--text-muted);
+      text-decoration:none;
+      opacity:.55;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:22px;
+      height:22px;
+      border-radius:6px;
+      border:1px solid transparent;
+      transition:opacity .15s,border-color .15s,background .15s;
+    }
+    .urlArrow:hover{
+      opacity:1;
+      color:var(--yale-blue);
+      border-color:#ddd;
+      background:#fafafa;
+    }
+    .urlCount{
+      font-family:var(--mono);
+      font-size:11px;
+      color:#666;
+      white-space:nowrap;
+    }
+
+    /* Locks */
+    .lockOverlay{
+      position:absolute;inset:0;
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(2px);
+      display:flex;align-items:center;justify-content:center;
+      z-index:5;
+      transition:opacity .2s;
+    }
+    .lockOverlay.hidden{opacity:0;pointer-events:none}
+    .lockCard{
+      background:#fff;
+      border:1px solid #ccc;
+      box-shadow:0 4px 12px rgba(0,0,0,.1);
+      padding:20px;
+      text-align:center;
+      max-width:420px;
+      border-radius:var(--radius);
+    }
+    .lockTitle{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--yale-blue);margin-bottom:6px}
+    .lockSub{font-size:13px;color:var(--text-muted);margin:0}
+
+    /* Footer + Privacy */
+    .site-footer{
+      background:#f0f0f0;
+      border-top:1px solid var(--border-color);
+      padding:20px 0;
+      margin-top:auto;
+      text-align:center;
+      font-size:12px;
+      color:var(--text-muted);
+    }
+    .site-footer .linkBtn{
+      background:none;border:none;padding:0;
+      color:var(--text-muted);
+      text-decoration:underline;
+      cursor:pointer;
+      font-size:12px;
+    }
+    .site-footer .linkBtn:hover{color:var(--yale-blue)}
+
+    .modal{
+      position:fixed;inset:0;z-index:200;
+      background:rgba(0,0,0,.4);
+      backdrop-filter:blur(2px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;pointer-events:none;transition:opacity .2s ease;
+    }
+    .modal.open{opacity:1;pointer-events:auto}
+    .modalBox{
+      background:#fff;width:520px;max-width:92%;
+      padding:25px;border-radius:var(--radius);
+      box-shadow:0 10px 25px rgba(0,0,0,.15);
+      position:relative;
+    }
+    .modalBox h4{margin:0 0 12px;font-family:var(--serif);color:var(--yale-blue);font-size:18px}
+    .modalBox p{font-size:14px;color:#333;line-height:1.5;margin:0 0 10px}
+    .modalClose{
+      position:absolute;top:15px;right:15px;
+      background:none;border:none;font-size:20px;cursor:pointer;color:#999;
+    }
+    .modalClose:hover{color:#333}
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <div class="brandLeft">
+         <h1>Bookpull Spreadsheet Generator</h1>
+<div class="sub">Law Journal Source Pulling Sheet Generator</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="hero">
+      <h2>Paste footnotes or upload a Word <span class="mono">.docx</span>, split sources, assign pullers, export to Excel.</h2>
+      <p>
+        This tool splits footnotes into individual sources (e.g., <span class="mono">2.1</span>, <span class="mono">2.2</span>),
+        assigns pullers in contiguous blocks, extracts any URL found in each source line, and exports an Excel-ready sheet.
+        If the first blocks start with <span class="mono">*</span> (e.g., author notes), they’re labeled <span class="mono">author info</span> and do not affect numbering.
+      </p>
+    </div>
+
+    <div class="grid">
+      <section class="card" id="section1">
+        <div class="cardHeader">
+          <h3>Step 1 — Configuration &amp; Input</h3>
+          <div class="hint">Paste footnotes, or upload a Word <span class="mono">.docx</span> to extract footnotes automatically.</div>
+        </div>
+        <div class="cardBody">
+
+          <div class="twoCol">
+            <div>
+              <label>Pullers (type names, then comma)</label>
+              <div id="pullerTagWrap" class="tagInputWrap" aria-label="Puller tags input">
+                <input id="pullerInput" class="tagTextInput" placeholder='Type "Abbey Plein", then ","' />
+              </div>
+              <div class="small">
+                Like Scholastica keywords: type a name, then <span class="kbd">,</span> to create a tag. Click <span class="kbd">×</span> to remove.
+                Pullers are assigned in contiguous blocks across base footnotes.
+              </div>
+            </div>
+
+            <div>
+              <div class="twoCol">
+                <div>
+                  <label>Start numbering at</label>
+                  <input id="startNumber" inputmode="numeric" value="1" />
+                  <div class="small">Applied to base footnotes (then sources become <span class="mono">N.1</span>, <span class="mono">N.2</span>, etc.).</div>
+                </div>
+                <div>
+                  <label>Puller assignment</label>
+                  <select id="assignMode">
+                    <option value="blocks" selected>Block allocation (together)</option>
+                    <option value="roundrobin">Round-robin (dispersed)</option>
+                  </select>
+                  <div class="small">Default keeps assignments grouped.</div>
+                </div>
+              </div>
+
+              <div class="twoCol" style="margin-top: 12px;">
+                <div>
+                  <label>Split footnotes by</label>
+                  <select id="splitFootnotesMode">
+                    <option value="auto" selected>Auto detect</option>
+                    <option value="markers">Markers like [1] / 1. / 1)</option>
+                    <option value="blank">Blank lines</option>
+                    <option value="line">Every non-empty line</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Split sources by</label>
+                  <select id="splitSourcesMode">
+                    <option value="smart" selected>Smart (top-level semicolons)</option>
+                    <option value="aggressive">Aggressive (more splits)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="twoCol" style="margin-top: 12px;">
+                <div class="checkbox">
+                  <input id="skipIdIbid" type="checkbox" checked />
+                  <span>Skip footnotes that are only Id./Ibid.</span>
+                </div>
+                <div>
+                  <label>Default Pulled value</label>
+                  <select id="defaultPulled">
+                    <option value="" selected>(blank)</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="N/A">N/A</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="note">
+                <strong>Word upload:</strong> Only <span class="mono">.docx</span> is supported. The file is processed locally in your browser.
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;">
+            <div class="tabs" role="tablist" aria-label="Input mode">
+              <button id="tabPaste" class="tab active" type="button">Paste Footnotes</button>
+              <button id="tabDocx" class="tab" type="button">Upload Word (.docx)</button>
+            </div>
+          </div>
+
+          <div id="panelPaste">
+            <label>Paste a batch of footnotes</label>
+            <textarea id="footnotesText" placeholder='* Frederick Liu, J.D. Candidate at Yale Law School...&#10;[1] See ...; see also ...&#10;[2] ...'></textarea>
+
+            <div class="row" style="margin-top:12px; justify-content: space-between;">
+              <button id="loadSampleBtn" class="btn secondary auto" type="button">Load sample input</button>
+              <button id="parsePasteBtn" class="btn primary auto" type="button">Parse &amp; build table</button>
+            </div>
+
+            <div class="small">
+              Tip: If your paste is messy, try “Split footnotes by” = <span class="kbd">Blank lines</span> or <span class="kbd">Every non-empty line</span>.
+            </div>
+          </div>
+
+          <div id="panelDocx" style="display:none;">
+            <label>Upload Word file (.docx)</label>
+            <input id="docxFile" type="file" accept=".docx" />
+            <div class="row" style="margin-top:12px; justify-content: space-between;">
+              <button id="extractDocxBtn" class="btn primary auto" type="button">Extract footnotes from .docx</button>
+              <button id="useExtractedBtn" class="btn secondary auto" type="button" disabled>Use extracted &amp; build table</button>
+            </div>
+            <div class="small">
+              “Use extracted &amp; build table” unlocks only after you run extraction.
+            </div>
+
+            <div id="docxStatus" class="status">Waiting for a .docx file…</div>
+          </div>
+
+          <div id="status" class="status">Step 1: ready.</div>
+        </div>
+      </section>
+
+      <section class="card" id="section2">
+        <div class="cardHeader">
+          <h3>Step 2 — Actions</h3>
+          <div class="hint">Assign pullers, mark pulled status, and export.</div>
+        </div>
+        <div class="cardBody">
+          <div class="row" style="flex-wrap: wrap;">
+            <button id="assignPullersBtn" class="btn secondary auto" type="button" disabled>Re-assign pullers</button>
+            <button id="markAllYesBtn" class="btn secondary auto" type="button" disabled>Mark all Yes</button>
+            <button id="markAllNoBtn" class="btn secondary auto" type="button" disabled>Mark all No</button>
+            <button id="clearPulledBtn" class="btn secondary auto" type="button" disabled>Clear Pulled</button>
+          </div>
+
+          <div class="row" style="margin-top:10px; flex-wrap: wrap;">
+            <button id="exportXlsBtn" class="btn primary auto" type="button" disabled>Export Excel (.xls)</button>
+            <button id="exportCsvBtn" class="btn secondary auto" type="button" disabled>Export CSV</button>
+            <button id="copyTsvBtn" class="btn secondary auto" type="button" disabled>Copy as TSV</button>
+          </div>
+
+          <div class="note">
+            <strong>Excel colors:</strong> Pulled = <span class="mono">Yes</span> exports green rows; Pulled = <span class="mono">No</span> exports red rows.
+          </div>
+        </div>
+
+        <div id="lock2" class="lockOverlay">
+          <div class="lockCard">
+            <div class="lockTitle">Locked</div>
+            <p class="lockSub">Complete Step 1 (build the table) to unlock actions and export.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" id="section3" style="margin-top:25px;">
+      <div class="cardHeader">
+        <h3>Step 3 — Results Table (Editable)</h3>
+        <div class="hint">Edit citations, extracted URL, pulled status, puller assignment, and notes before exporting.</div>
+      </div>
+      <div class="cardBody">
+        <div class="tableWrap">
+          <table id="resultsTable" style="display:none;">
+            <thead>
+              <tr>
+                <th style="width:120px;">First FN</th>
+                <th style="min-width:420px;">Citation</th>
+                <th style="min-width:260px;">URL (auto-extracted)</th>
+               <th class="pulledCol">Pulled</th>
+<th class="pullerCol">Puller</th>
+                <th style="min-width:240px;">Notes</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+        <div id="emptyHint" class="status">No rows yet. Build the table in Step 1 to unlock Steps 2–3.</div>
+      </div>
+
+      <div id="lock3" class="lockOverlay">
+        <div class="lockCard">
+          <div class="lockTitle">Awaiting data</div>
+          <p class="lockSub">Build the table in Step 1 to view and edit results here.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      &copy; 2026 Bookpull Spreadsheet Generator &middot; <button id="privacyTrigger" class="linkBtn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <div id="privacyModal" class="modal" aria-hidden="true">
+    <div class="modalBox" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+      <button class="modalClose" id="privacyClose" aria-label="Close">&times;</button>
+      <h4 id="privacyTitle">Privacy Policy</h4>
+      <p><strong>No Data Collection:</strong> This tool runs entirely client-side (in your browser). We do not collect, store, or transmit your data to any server.</p>
+      <p><strong>Local Processing:</strong> Pasted text and uploaded <span class="mono">.docx</span> files are processed locally in your browser memory. Exports (<span class="mono">.xls</span>, <span class="mono">.csv</span>, copy/TSV) are generated locally.</p>
+      <p><strong>No Tracking:</strong> No analytics, cookies, or tracking scripts are included.</p>
+      <p>If you have questions, contact Frederick Liu at <a href="mailto:frederick.liu@yale.edu">frederick.liu@yale.edu</a>.</p>
+      <button id="privacyBtnClose" class="btn secondary" style="width:100%; margin-top:10px;" type="button">Close</button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+
+  // Tabs
+  const tabPaste = $("tabPaste");
+  const tabDocx = $("tabDocx");
+  const panelPaste = $("panelPaste");
+  const panelDocx = $("panelDocx");
+
+  // Locks
+  const lock2 = $("lock2");
+  const lock3 = $("lock3");
+
+  // Privacy modal
+  const privacyTrigger = $("privacyTrigger");
+  const privacyModal = $("privacyModal");
+  const privacyClose = $("privacyClose");
+  const privacyBtnClose = $("privacyBtnClose");
+
+  function openPrivacy(){ privacyModal.classList.add("open"); privacyModal.setAttribute("aria-hidden","false"); }
+  function closePrivacy(){ privacyModal.classList.remove("open"); privacyModal.setAttribute("aria-hidden","true"); }
+  privacyTrigger.addEventListener("click", openPrivacy);
+  privacyClose.addEventListener("click", closePrivacy);
+  privacyBtnClose.addEventListener("click", closePrivacy);
+  privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) closePrivacy(); });
+
+  // Puller tag input
+  const pullerTagWrap = $("pullerTagWrap");
+  const pullerInput = $("pullerInput");
+  let pullerTags = [];
+
+  // Inputs
+  const startNumber = $("startNumber");
+  const assignMode = $("assignMode");
+  const splitFootnotesMode = $("splitFootnotesMode");
+  const splitSourcesMode = $("splitSourcesMode");
+  const skipIdIbid = $("skipIdIbid");
+  const defaultPulled = $("defaultPulled");
+
+  const footnotesText = $("footnotesText");
+  const parsePasteBtn = $("parsePasteBtn");
+  const loadSampleBtn = $("loadSampleBtn");
+
+  // Docx
+  const docxFile = $("docxFile");
+  const extractDocxBtn = $("extractDocxBtn");
+  const useExtractedBtn = $("useExtractedBtn");
+  const docxStatus = $("docxStatus");
+
+  // Status
+  const statusEl = $("status");
+
+  // Actions
+  const assignPullersBtn = $("assignPullersBtn");
+  const markAllYesBtn = $("markAllYesBtn");
+  const markAllNoBtn = $("markAllNoBtn");
+  const clearPulledBtn = $("clearPulledBtn");
+  const exportXlsBtn = $("exportXlsBtn");
+  const exportCsvBtn = $("exportCsvBtn");
+  const copyTsvBtn = $("copyTsvBtn");
+
+  // Table
+  const resultsTable = $("resultsTable");
+  const resultsBody = $("resultsBody");
+  const emptyHint = $("emptyHint");
+
+  // State
+  /**
+   * rows: [{
+   *  firstFn, citation, url, urlCount, urlAuto, pulled, puller, notes, baseIndex
+   * }]
+   */
+  let rows = [];
+  let extractedBlocks = [];
+
+  function setStatus(msg) { statusEl.textContent = msg; }
+  function setDocxStatus(msg) { docxStatus.textContent = msg; }
+
+  function step1Done(){ return rows.length > 0; }
+
+  function syncLocks() {
+    const done = step1Done();
+    lock2.classList.toggle("hidden", done);
+    lock3.classList.toggle("hidden", done);
+  }
+
+  function normalizeNewlines(s) {
+    return (s ?? "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  }
+
+  function normalizeSpaces(s) {
+    return (s ?? "")
+      .replace(/\s+/g, " ")
+      .replace(/\s+([.,;:)\]])/g, "$1")
+      .replace(/([([])\s+/g, "$1")
+      .trim();
+  }
+
+  // --- URL extraction logic (ported from EasyPerma style) ---
+  function normalizeUrl(raw){
+    return (raw ?? "").replace(/[)\].,;:]+$/g, "");
+  }
+
+  function cleanPdfArtifacts(text) {
+    let clean = String(text ?? "");
+    clean = clean.replace(/(\S)-\s+([a-zA-Z0-9/._])/g, "$1-$2");
+    clean = clean.replace(/(\/)\s+([a-zA-Z0-9])/g, "$1$2");
+    clean = clean.replace(/([a-zA-Z0-9])\s+(\.(html|php|aspx|jsp|pdf))/gi, "$1$2");
+    return clean;
+  }
+
+  function extractUrls(text){
+    const re = /https?:\/\/[^\s<>"']+/gi;
+    const out = [];
+    const cleaned = cleanPdfArtifacts(text);
+    let m;
+    while ((m = re.exec(cleaned)) !== null) {
+      const u = normalizeUrl(m[0]);
+      try {
+        const parsed = new URL(u);
+        if (/^https?:$/.test(parsed.protocol)) out.push(parsed.toString());
+      } catch {}
+    }
+    return out;
+  }
+
+  function firstUrlInfo(text){
+    const urls = extractUrls(text);
+    return { url: urls[0] || "", count: urls.length };
+  }
+
+  // --- Puller tags logic ---
+  function getPullers() { return [...pullerTags]; }
+  function canonicalName(s) { return (s ?? "").trim().replace(/\s+/g, " "); }
+  function hasPuller(name) {
+    const lower = name.toLowerCase();
+    return pullerTags.some(p => p.toLowerCase() === lower);
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function renderPullerTags() {
+    const chips = pullerTagWrap.querySelectorAll(".chip");
+    chips.forEach(c => c.remove());
+
+    for (let i = 0; i < pullerTags.length; i++) {
+      const name = pullerTags[i];
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.innerHTML = `<span>${escapeHtml(name)}</span>`;
+      const x = document.createElement("button");
+      x.type = "button";
+      x.setAttribute("aria-label", `Remove ${name}`);
+      x.textContent = "×";
+      x.addEventListener("click", () => {
+        pullerTags.splice(i, 1);
+        renderPullerTags();
+        if (rows.length) renderTable();
+      });
+      chip.appendChild(x);
+      pullerTagWrap.insertBefore(chip, pullerInput);
+    }
+  }
+
+  function addPullersFromText(text) {
+    const parts = (text ?? "")
+      .split(",")
+      .map(p => canonicalName(p))
+      .filter(Boolean);
+
+    let added = 0;
+    for (const p of parts) {
+      if (!hasPuller(p)) { pullerTags.push(p); added++; }
+    }
+    if (added) {
+      renderPullerTags();
+      if (rows.length) renderTable();
+    }
+    return added;
+  }
+
+  function commitPullerInput() {
+    const val = pullerInput.value;
+    addPullersFromText(val);
+    pullerInput.value = "";
+  }
+
+  pullerInput.addEventListener("keydown", (e) => {
+    if (e.key === "," || e.key === "Enter" || e.key === "Tab") {
+      e.preventDefault();
+      commitPullerInput();
+      return;
+    }
+    if (e.key === "Backspace" && !pullerInput.value) {
+      if (pullerTags.length) {
+        pullerTags.pop();
+        renderPullerTags();
+        if (rows.length) renderTable();
+      }
+    }
+  });
+
+  pullerInput.addEventListener("input", () => {
+    if (pullerInput.value.includes(",")) {
+      const parts = pullerInput.value.split(",");
+      const last = parts.pop() ?? "";
+      addPullersFromText(parts.join(","));
+      pullerInput.value = last.trimStart();
+    }
+  });
+
+  pullerInput.addEventListener("blur", () => {
+    if (pullerInput.value.trim()) commitPullerInput();
+  });
+
+  pullerTagWrap.addEventListener("click", () => pullerInput.focus());
+
+  // -------- Footnote marker stripping --------
+  function stripLeadingFootnoteMarker(block) {
+    let s = (block ?? "").trim();
+    s = s.replace(/^\s*(\[\s*\d+\s*\]|\(\s*\d+\s*\)|\d+\s*[\.\)\]])\s*/g, "");
+    s = s.replace(/^\s*(\d+)\s*[\.\)\]]\s*/g, "");
+    s = s.replace(/^\s*\[\s*\d+\s*\]\s*/g, "");
+    return s.trim();
+  }
+
+  function beginsStarBlock(block) { return /^\*+/.test((block ?? "").trim()); }
+  function stripLeadingStarMarker(block) { return (block ?? "").trim().replace(/^\*+\s*/, "").trim(); }
+
+  function isIdIbidOnly(block) {
+    const s = stripLeadingFootnoteMarker(block)
+      .replace(/[“”"'()[\]{}]/g, "")
+      .trim()
+      .toLowerCase();
+    return /^(id\.?|ibid\.?)$/.test(s);
+  }
+
+  // -------- Footnote splitting (blocks) --------
+  function splitBlocksByMarkers(text) {
+    const t = normalizeNewlines(text);
+    const re = /(^|\n)\s*(\[\s*\d+\s*\]|\d+\s*[\.\)])/g;
+    const starts = [];
+    let m;
+    while ((m = re.exec(t)) !== null) {
+      const pos = m.index + m[1].length;
+      starts.push(pos);
+    }
+    if (starts.length >= 2) {
+      const out = [];
+      for (let i = 0; i < starts.length; i++) {
+        const a = starts[i];
+        const b = (i + 1 < starts.length) ? starts[i + 1] : t.length;
+        const chunk = t.slice(a, b).trim();
+        if (chunk) out.push(chunk);
+      }
+      return out;
+    }
+    return null;
+  }
+
+  function splitBlocksByBlankLines(text) {
+    const t = normalizeNewlines(text);
+    return t.split(/\n\s*\n+/).map(s => s.trim()).filter(Boolean);
+  }
+
+  function splitBlocksByLines(text) {
+    const t = normalizeNewlines(text);
+    return t.split("\n").map(s => s.trim()).filter(Boolean);
+  }
+
+  function splitFootnoteBlocks(text) {
+    const mode = splitFootnotesMode.value;
+    const t = (text ?? "").trim();
+    if (!t) return [];
+
+    if (mode === "markers") return splitBlocksByMarkers(t) ?? splitBlocksByBlankLines(t);
+    if (mode === "blank") return splitBlocksByBlankLines(t);
+    if (mode === "line") return splitBlocksByLines(t);
+
+    const byMarkers = splitBlocksByMarkers(t);
+    if (byMarkers && byMarkers.length >= 2) return byMarkers;
+
+    const byBlank = splitBlocksByBlankLines(t);
+    if (byBlank.length >= 2) return byBlank;
+
+    return splitBlocksByLines(t);
+  }
+
+  // -------- Source splitting (within a footnote) --------
+  function splitOnTopLevelSemicolons(s) {
+    const out = [];
+    let cur = "";
+    let par = 0, br = 0, cr = 0;
+    let inDQ = false, inSQ = false;
+
+    for (let i = 0; i < s.length; i++) {
+      const ch = s[i];
+
+      if (ch === "“" || ch === "”" || ch === "\"") { inDQ = !inDQ; cur += ch; continue; }
+      if (ch === "’" || ch === "‘" || ch === "'")  { inSQ = !inSQ; cur += ch; continue; }
+
+      if (!inDQ && !inSQ) {
+        if (ch === "(") par++;
+        else if (ch === ")") par = Math.max(0, par - 1);
+        else if (ch === "[") br++;
+        else if (ch === "]") br = Math.max(0, br - 1);
+        else if (ch === "{") cr++;
+        else if (ch === "}") cr = Math.max(0, cr - 1);
+
+        if (ch === ";" && par === 0 && br === 0 && cr === 0) {
+          const piece = cur.trim();
+          if (piece) out.push(piece);
+          cur = "";
+          continue;
+        }
+      }
+      cur += ch;
+    }
+
+    const last = cur.trim();
+    if (last) out.push(last);
+    return out;
+  }
+
+  function splitSourcesSmart(footnoteText) {
+    const raw = normalizeNewlines(footnoteText).replace(/\n+/g, " ");
+    const cleaned = normalizeSpaces(raw);
+    const parts = splitOnTopLevelSemicolons(cleaned).map(normalizeSpaces).filter(Boolean);
+    return parts.length ? parts : (cleaned ? [cleaned] : []);
+  }
+
+  function splitSourcesAggressive(footnoteText) {
+    const base = splitSourcesSmart(footnoteText);
+    const out = [];
+    const cueRe = /\b(See also|see also|But see|but see|Cf\.|cf\.|Compare|compare|See generally|see generally)\b/g;
+
+    for (const chunk of base) {
+      const matches = [...chunk.matchAll(cueRe)];
+      if (matches.length <= 1) { out.push(chunk); continue; }
+
+      let start = 0;
+      for (let i = 1; i < matches.length; i++) {
+        const idx = matches[i].index;
+        const part = chunk.slice(start, idx).trim();
+        if (part) out.push(part);
+        start = idx;
+      }
+      const last = chunk.slice(start).trim();
+      if (last) out.push(last);
+    }
+    return out.map(normalizeSpaces).filter(Boolean);
+  }
+
+  function splitSources(footnoteText) {
+    return (splitSourcesMode.value === "aggressive")
+      ? splitSourcesAggressive(footnoteText)
+      : splitSourcesSmart(footnoteText);
+  }
+
+  // -------- Puller assignment --------
+  function assignPullersToBaseFootnotes(baseCount, pullers) {
+    const out = new Array(baseCount).fill("");
+    if (!pullers.length || baseCount <= 0) return out;
+
+    // blocks: contiguous assignments
+    if (assignMode.value === "blocks") {
+      for (let i = 0; i < baseCount; i++) {
+        const p = Math.floor(i * pullers.length / baseCount);
+        out[i] = pullers[Math.min(p, pullers.length - 1)];
+      }
+      return out;
+    }
+
+    // roundrobin: dispersed
+    for (let i = 0; i < baseCount; i++) out[i] = pullers[i % pullers.length];
+    return out;
+  }
+
+  // -------- Build rows --------
+  function buildRowsFromBlocks(blocks) {
+    const pullers = getPullers();
+    const start = Math.max(1, Math.floor(Number(startNumber.value || "1")));
+    const skipId = !!skipIdIbid.checked;
+    const defPulled = defaultPulled.value;
+
+    const rawBlocks = (blocks || []).map(b => (b ?? "").trim()).filter(Boolean);
+    if (!rawBlocks.length) {
+      rows = [];
+      renderTable();
+      syncActionButtons();
+      syncLocks();
+      setStatus("No footnotes found.");
+      return;
+    }
+
+    // Star blocks at start => author info
+    const authorInfoBlocks = [];
+    let k = 0;
+    while (k < rawBlocks.length && beginsStarBlock(rawBlocks[k])) {
+      authorInfoBlocks.push(rawBlocks[k]);
+      k++;
+    }
+
+    const remaining = rawBlocks.slice(k);
+    const numberedBlocks = [];
+    for (const b of remaining) {
+      if (skipId && isIdIbidOnly(b)) continue;
+      numberedBlocks.push(b);
+    }
+
+    const baseCount = numberedBlocks.length;
+    const baseToPuller = assignPullersToBaseFootnotes(baseCount, pullers);
+    const nextRows = [];
+
+    // Author info rows
+    for (const b of authorInfoBlocks) {
+      const body = stripLeadingStarMarker(b);
+      const sources = splitSources(body);
+      const finalSources = sources.length ? sources : (body ? [body] : []);
+      for (const s of finalSources) {
+        const info = firstUrlInfo(s);
+        nextRows.push({
+          firstFn: "author info",
+          citation: s,
+          url: info.url,
+          urlCount: info.count,
+          urlAuto: true,
+          pulled: "N/A",
+          puller: "",
+          notes: "",
+          baseIndex: -1
+        });
+      }
+    }
+
+    // Numbered rows
+    for (let i = 0; i < numberedBlocks.length; i++) {
+      const baseNum = start + i;
+      const puller = baseToPuller[i] || "";
+      const body = stripLeadingFootnoteMarker(numberedBlocks[i]);
+
+      const sources = splitSources(body);
+      const finalSources = sources.length ? sources : (body ? [body] : []);
+
+      for (let j = 0; j < finalSources.length; j++) {
+        const citation = finalSources[j];
+        const info = firstUrlInfo(citation);
+        nextRows.push({
+          firstFn: `${baseNum}.${j + 1}`,
+          citation,
+          url: info.url,
+          urlCount: info.count,
+          urlAuto: true,
+          pulled: defPulled,
+          puller,
+          notes: "",
+          baseIndex: i
+        });
+      }
+    }
+
+    rows = nextRows;
+    renderTable();
+    syncActionButtons();
+    syncLocks();
+
+    const msg =
+      `Step 1 complete.\n` +
+      `Built ${rows.length} row(s).\n` +
+      (authorInfoBlocks.length ? `• Author info blocks: ${authorInfoBlocks.length} (labeled "author info")\n` : "") +
+      `• Numbered base footnotes: ${baseCount} (starting at ${start})`;
+    setStatus(msg);
+  }
+
+  // -------- Table rendering --------
+  function makePulledSelect(value, idx) {
+    const sel = document.createElement("select");
+    sel.className = "tableInput";
+    sel.style.padding = "6px";
+    sel.style.fontFamily = "var(--sans)";
+    const opts = ["", "Yes", "No", "N/A"];
+    for (const o of opts) {
+      const opt = document.createElement("option");
+      opt.value = o;
+      opt.textContent = o === "" ? "(blank)" : o;
+      if (o === (value ?? "")) opt.selected = true;
+      sel.appendChild(opt);
+    }
+    sel.addEventListener("change", () => {
+      rows[idx].pulled = sel.value;
+      renderTable();
+    });
+    return sel;
+  }
+
+  function makePullerSelect(value, idx) {
+    const sel = document.createElement("select");
+    sel.className = "tableInput";
+    sel.style.padding = "6px";
+    sel.style.fontFamily = "var(--sans)";
+
+    const pullers = getPullers();
+    const unique = Array.from(new Set(["", ...pullers, (value ?? "")].filter(v => v !== undefined)));
+
+    for (const o of unique) {
+      const opt = document.createElement("option");
+      opt.value = o;
+      opt.textContent = o === "" ? "(unassigned)" : o;
+      if (o === (value ?? "")) opt.selected = true;
+      sel.appendChild(opt);
+    }
+
+    sel.addEventListener("change", () => { rows[idx].puller = sel.value; });
+    return sel;
+  }
+
+  function pulledTag(pulled) {
+    if (pulled === "Yes") return `<span class="tag ok">Yes</span>`;
+    if (pulled === "No")  return `<span class="tag bad">No</span>`;
+    if (pulled === "N/A") return `<span class="tag mid">N/A</span>`;
+    return `<span class="tag">—</span>`;
+  }
+
+  function renderTable() {
+    resultsBody.innerHTML = "";
+
+    if (!rows.length) {
+      resultsTable.style.display = "none";
+      emptyHint.style.display = "";
+      return;
+    }
+
+    resultsTable.style.display = "";
+    emptyHint.style.display = "none";
+
+    rows.forEach((r, idx) => {
+      const tr = document.createElement("tr");
+      if (r.pulled === "Yes") tr.classList.add("row-yes");
+      if (r.pulled === "No")  tr.classList.add("row-no");
+
+      // First FN
+      const tdFn = document.createElement("td");
+      tdFn.className = "mono";
+      tdFn.innerHTML = `<strong>${escapeHtml(r.firstFn)}</strong>`;
+      tr.appendChild(tdFn);
+
+      // Citation
+      const tdCit = document.createElement("td");
+      const ta = document.createElement("textarea");
+      ta.className = "tableInput";
+      ta.style.minHeight = "70px";
+      ta.style.fontFamily = "var(--mono)";
+      ta.style.fontSize = "12px";
+      ta.value = r.citation ?? "";
+      tdCit.appendChild(ta);
+      tr.appendChild(tdCit);
+
+      // URL (auto extracted, but editable)
+      const tdUrl = document.createElement("td");
+      const urlWrap = document.createElement("div");
+      urlWrap.className = "urlCell";
+
+      const urlInput = document.createElement("input");
+      urlInput.className = "tableInput";
+      urlInput.value = r.url ?? "";
+      urlInput.placeholder = "No URL found";
+      urlInput.spellcheck = false;
+
+      const arrow = document.createElement("a");
+      arrow.className = "urlArrow";
+      arrow.textContent = "↗";
+      arrow.target = "_blank";
+      arrow.rel = "noreferrer noopener";
+      arrow.href = (r.url && r.url.trim()) ? r.url.trim() : "#";
+      arrow.style.pointerEvents = (r.url && r.url.trim()) ? "auto" : "none";
+      arrow.style.opacity = (r.url && r.url.trim()) ? "" : "0.25";
+      arrow.title = (r.url && r.url.trim()) ? "Open URL in new tab" : "No URL to open";
+
+      const count = document.createElement("span");
+      count.className = "urlCount";
+      count.textContent = (r.urlCount && r.urlCount > 1) ? `(${r.urlCount} urls)` : "";
+
+      urlWrap.appendChild(urlInput);
+      urlWrap.appendChild(arrow);
+      urlWrap.appendChild(count);
+      tdUrl.appendChild(urlWrap);
+      tr.appendChild(tdUrl);
+
+      // Wire citation -> URL (only if urlAuto)
+      ta.addEventListener("input", () => {
+        rows[idx].citation = ta.value;
+        if (rows[idx].urlAuto) {
+          const info = firstUrlInfo(ta.value);
+          rows[idx].url = info.url;
+          rows[idx].urlCount = info.count;
+          urlInput.value = info.url;
+          count.textContent = (info.count > 1) ? `(${info.count} urls)` : "";
+          arrow.href = info.url ? info.url : "#";
+          arrow.style.pointerEvents = info.url ? "auto" : "none";
+          arrow.style.opacity = info.url ? "" : "0.25";
+          arrow.title = info.url ? "Open URL in new tab" : "No URL to open";
+        }
+      });
+
+      urlInput.addEventListener("input", () => {
+        rows[idx].url = urlInput.value.trim();
+        rows[idx].urlAuto = false; // user took control
+        arrow.href = rows[idx].url ? rows[idx].url : "#";
+        arrow.style.pointerEvents = rows[idx].url ? "auto" : "none";
+        arrow.style.opacity = rows[idx].url ? "" : "0.25";
+        arrow.title = rows[idx].url ? "Open URL in new tab" : "No URL to open";
+      });
+
+      // Pulled
+     const tdPulled = document.createElement("td");
+tdPulled.className = "pulledCell";
+      const pulledWrap = document.createElement("div");
+      pulledWrap.style.display = "grid";
+      pulledWrap.style.gap = "6px";
+      const sel = makePulledSelect(r.pulled, idx);
+      const tag = document.createElement("div");
+      tag.innerHTML = pulledTag(r.pulled);
+      pulledWrap.appendChild(sel);
+      pulledWrap.appendChild(tag);
+      tdPulled.appendChild(pulledWrap);
+      tr.appendChild(tdPulled);
+
+      // Puller
+const tdPuller = document.createElement("td");
+tdPuller.className = "pullerCell";
+      tdPuller.appendChild(makePullerSelect(r.puller, idx));
+      tr.appendChild(tdPuller);
+
+      // Notes
+      const tdNotes = document.createElement("td");
+      const notes = document.createElement("input");
+      notes.className = "tableInput";
+      notes.value = r.notes ?? "";
+      notes.placeholder = "e.g., needs Perma, missing pincite, etc.";
+      notes.addEventListener("input", () => { rows[idx].notes = notes.value; });
+      tdNotes.appendChild(notes);
+      tr.appendChild(tdNotes);
+
+      resultsBody.appendChild(tr);
+    });
+  }
+
+  function syncActionButtons() {
+    const hasRows = rows.length > 0;
+    assignPullersBtn.disabled = !hasRows;
+    markAllYesBtn.disabled = !hasRows;
+    markAllNoBtn.disabled = !hasRows;
+    clearPulledBtn.disabled = !hasRows;
+    exportXlsBtn.disabled = !hasRows;
+    exportCsvBtn.disabled = !hasRows;
+    copyTsvBtn.disabled = !hasRows;
+  }
+
+  // -------- Exports --------
+  function getSheetData() {
+    return rows.map(r => ({
+      "First FN": r.firstFn ?? "",
+      "Citation": r.citation ?? "",
+      "URL": r.url ?? "",
+      "Pulled": r.pulled ?? "",
+      "Puller": r.puller ?? "",
+      "Notes": r.notes ?? ""
+    }));
+  }
+
+  function downloadBlob(blob, filename) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 500);
+  }
+
+  function exportCsv() {
+    const data = getSheetData();
+    const cols = ["First FN", "Citation", "URL", "Pulled", "Puller", "Notes"];
+    const esc = (v) => `"${String(v ?? "").replaceAll('"','""')}"`;
+
+    const lines = [
+      cols.join(","),
+      ...data.map(row => cols.map(c => esc(row[c])).join(","))
+    ];
+    downloadBlob(new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" }), "sourcecite.csv");
+  }
+
+  function exportXlsHtml() {
+    const cols = ["First FN", "Citation", "URL", "Pulled", "Puller", "Notes"];
+    const data = getSheetData();
+
+    const htmlRows = [];
+    htmlRows.push("<tr>" + cols.map(c => `<th style="text-align:left; border:1px solid #ccc; padding:6px; background:#f8f8f8;">${escapeHtml(c)}</th>`).join("") + "</tr>");
+
+    for (const row of data) {
+      const pulled = row["Pulled"];
+      const bg = (pulled === "Yes") ? "#e6fffa" : (pulled === "No") ? "#fff5f5" : "#ffffff";
+      const tr = "<tr>" + cols.map(c => {
+        const val = row[c] ?? "";
+        return `<td style="border:1px solid #ccc; padding:6px; vertical-align:top; background:${bg};">${escapeHtml(val)}</td>`;
+      }).join("") + "</tr>";
+      htmlRows.push(tr);
+    }
+
+    const doc =
+`<html><head><meta charset="utf-8"></head>
+<body>
+<table style="border-collapse:collapse; font-family: Calibri, Arial, sans-serif; font-size: 11pt;">
+${htmlRows.join("\n")}
+</table>
+</body></html>`;
+
+    downloadBlob(new Blob([doc], { type: "application/vnd.ms-excel;charset=utf-8" }), "sourcecite.xls");
+  }
+
+  async function copyTsv() {
+    const data = getSheetData();
+    const cols = ["First FN", "Citation", "URL", "Pulled", "Puller", "Notes"];
+    const lines = [cols.join("\t"), ...data.map(r => cols.map(c => String(r[c] ?? "")).join("\t"))];
+    const tsv = lines.join("\n");
+    try {
+      await navigator.clipboard.writeText(tsv);
+      setStatus(`Copied ${rows.length} row(s) as TSV to clipboard.`);
+    } catch {
+      setStatus("Clipboard copy failed (browser blocked it). You can still export .xls or .csv.");
+    }
+  }
+
+  // -------- Docx unzip + footnote extraction (client-side) --------
+  function u16(view, off) { return view.getUint16(off, true); }
+  function u32(view, off) { return view.getUint32(off, true); }
+
+  async function inflateRawBytes(u8) {
+    if (!("DecompressionStream" in window)) {
+      throw new Error("This browser doesn't support DecompressionStream. Use paste mode, or try Chrome/Edge.");
+    }
+    const tryAlgo = async (algo) => {
+      const ds = new DecompressionStream(algo);
+      const stream = new Blob([u8]).stream().pipeThrough(ds);
+      const ab = await new Response(stream).arrayBuffer();
+      return new Uint8Array(ab);
+    };
+    try { return await tryAlgo("deflate-raw"); } catch { return await tryAlgo("deflate"); }
+  }
+
+  async function unzipDocx(arrayBuffer) {
+    const bytes = new Uint8Array(arrayBuffer);
+    const view = new DataView(arrayBuffer);
+
+    const EOCD_SIG = 0x06054b50;
+    const maxComment = 0xFFFF;
+    const minEOCD = 22;
+    const start = Math.max(0, bytes.length - (minEOCD + maxComment));
+    let eocd = -1;
+
+    for (let i = bytes.length - minEOCD; i >= start; i--) {
+      if (u32(view, i) === EOCD_SIG) { eocd = i; break; }
+    }
+    if (eocd < 0) throw new Error("Not a valid .docx (ZIP) file (EOCD not found).");
+
+    const cdSize = u32(view, eocd + 12);
+    const cdOffset = u32(view, eocd + 16);
+
+    const CDFH_SIG = 0x02014b50;
+    const LFH_SIG  = 0x04034b50;
+
+    const entries = new Map();
+    let ptr = cdOffset;
+    const cdEnd = cdOffset + cdSize;
+
+    while (ptr < cdEnd) {
+      if (u32(view, ptr) !== CDFH_SIG) break;
+
+      const compMethod = u16(view, ptr + 10);
+      const compSize = u32(view, ptr + 20);
+      const nameLen = u16(view, ptr + 28);
+      const extraLen = u16(view, ptr + 30);
+      const commentLen = u16(view, ptr + 32);
+      const lfhOff = u32(view, ptr + 42);
+
+      const nameBytes = bytes.slice(ptr + 46, ptr + 46 + nameLen);
+      const name = new TextDecoder("utf-8").decode(nameBytes);
+
+      entries.set(name, { compMethod, compSize, lfhOff });
+      ptr = ptr + 46 + nameLen + extraLen + commentLen;
+    }
+
+    async function getFile(path) {
+      const e = entries.get(path);
+      if (!e) return null;
+
+      const { compMethod, compSize, lfhOff } = e;
+      if (u32(view, lfhOff) !== LFH_SIG) throw new Error(`ZIP local header not found for ${path}.`);
+
+      const nameLen = u16(view, lfhOff + 26);
+      const extraLen = u16(view, lfhOff + 28);
+      const dataOff = lfhOff + 30 + nameLen + extraLen;
+
+      const comp = bytes.slice(dataOff, dataOff + compSize);
+      if (compMethod === 0) return comp;
+      if (compMethod === 8) return await inflateRawBytes(comp);
+      throw new Error(`Unsupported ZIP compression method (${compMethod}) for ${path}.`);
+    }
+
+    return { getFile };
+  }
+
+  function xmlTextFromBytes(u8) { return new TextDecoder("utf-8").decode(u8); }
+
+  function parseXml(xmlText) {
+    const p = new DOMParser();
+    const doc = p.parseFromString(xmlText, "application/xml");
+    const pe = doc.getElementsByTagName("parsererror");
+    if (pe && pe.length) throw new Error("Failed to parse Word XML.");
+    return doc;
+  }
+
+  function localName(el) { return (el && el.localName) ? el.localName : (el.tagName || ""); }
+
+  function getAttrAny(el, names) {
+    for (const n of names) {
+      const v = el.getAttribute(n);
+      if (v !== null && v !== undefined) return v;
+    }
+    return null;
+  }
+
+  function extractFootnoteText(footnoteEl) {
+    let out = "";
+    const walker = footnoteEl.ownerDocument.createTreeWalker(
+      footnoteEl,
+      NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+      null
+    );
+
+    let node;
+    let lastWasText = false;
+
+    while ((node = walker.nextNode())) {
+      if (node.nodeType === Node.TEXT_NODE) continue;
+
+      const ln = localName(node);
+      if (ln === "t") {
+        const t = node.textContent ?? "";
+        if (t) { out += t; lastWasText = true; }
+      } else if (ln === "tab") {
+        out += "\t"; lastWasText = false;
+      } else if (ln === "br" || ln === "cr") {
+        out += "\n"; lastWasText = false;
+      } else if (ln === "p") {
+        if (lastWasText) out += "\n";
+        lastWasText = false;
+      }
+    }
+    return normalizeSpaces(out.replace(/\n+/g, " ").trim());
+  }
+
+  async function extractFootnotesFromDocxFile(file) {
+    if (!file) throw new Error("No file selected.");
+    if (!file.name.toLowerCase().endsWith(".docx")) throw new Error("Please upload a .docx file.");
+
+    const buf = await file.arrayBuffer();
+    const zip = await unzipDocx(buf);
+
+    const docBytes = await zip.getFile("word/document.xml");
+    const footBytes = await zip.getFile("word/footnotes.xml");
+    if (!docBytes) throw new Error("Missing word/document.xml in this .docx.");
+    if (!footBytes) throw new Error("Missing word/footnotes.xml in this .docx (no footnotes?).");
+
+    const docXml = parseXml(xmlTextFromBytes(docBytes));
+    const footXml = parseXml(xmlTextFromBytes(footBytes));
+
+    const idToText = new Map();
+    const footnoteEls = Array.from(footXml.getElementsByTagNameNS("*", "footnote"));
+    for (const fn of footnoteEls) {
+      const idStr = getAttrAny(fn, ["w:id", "id"]);
+      if (idStr == null) continue;
+      const id = Number(idStr);
+      if (!Number.isFinite(id) || id <= 0) continue;
+      const text = extractFootnoteText(fn);
+      idToText.set(String(id), text);
+    }
+
+    const refs = Array.from(docXml.getElementsByTagNameNS("*", "footnoteReference"));
+    const order = [];
+    const seen = new Set();
+    for (const r of refs) {
+      const idStr = getAttrAny(r, ["w:id", "id"]);
+      if (!idStr) continue;
+      if (seen.has(idStr)) continue;
+      seen.add(idStr);
+      order.push(idStr);
+    }
+
+    const blocks = [];
+    for (const id of order) {
+      const text = idToText.get(String(id));
+      if (text && text.trim()) blocks.push(text.trim());
+    }
+    return blocks;
+  }
+
+  // -------- UI handlers --------
+  function setMode(mode) {
+    if (mode === "paste") {
+      tabPaste.classList.add("active");
+      tabDocx.classList.remove("active");
+      panelPaste.style.display = "";
+      panelDocx.style.display = "none";
+    } else {
+      tabDocx.classList.add("active");
+      tabPaste.classList.remove("active");
+      panelDocx.style.display = "";
+      panelPaste.style.display = "none";
+    }
+  }
+
+  tabPaste.addEventListener("click", () => setMode("paste"));
+  tabDocx.addEventListener("click", () => setMode("docx"));
+
+  loadSampleBtn.addEventListener("click", () => {
+    footnotesText.value =
+`* Frederick Liu, J.D. Candidate at Yale Law School. Thanks to God, Country, and the brave souls who read footnotes for fun.
+** All names, titles, and sources below are fictional and used only as demo text.
+
+[1] See Harry Botter, The Law of Tiny Robots and Wizards 12–14 (Blue Lantern Press 2031), https://example.com/tiny-robots; see also “Robot Etiquette FAQ,” https://example.com/robot-etiquette.
+
+[2] But see Hermoney Grengar, Against Over-Citing Magic, 99 J. Imaginary L. 1, 5 (2029) (arguing that “supra” should be used sparingly).
+
+[3] Compare The Office of Unverified Statistics, Annual Report on Citation Drift 7 (2028), https://example.com/citation-drift.pdf, with Avery Moss, The Perils of Broken Links 22 (2030), https://example.com/broken-links (collecting examples).`;
+    setStatus("Sample input loaded. Click “Parse & build table”.");
+  });
+
+  parsePasteBtn.addEventListener("click", () => {
+    const raw = footnotesText.value || "";
+    const blocks = splitFootnoteBlocks(raw);
+    if (!blocks.length) {
+      setStatus("No footnotes found. Paste a batch of footnotes first.");
+      return;
+    }
+    buildRowsFromBlocks(blocks);
+  });
+
+  extractDocxBtn.addEventListener("click", async () => {
+    const file = docxFile.files && docxFile.files[0];
+    if (!file) { setDocxStatus("Select a .docx first."); return; }
+
+    useExtractedBtn.disabled = true;
+    extractedBlocks = [];
+    setDocxStatus("Extracting footnotes…");
+
+    try {
+      const blocks = await extractFootnotesFromDocxFile(file);
+      extractedBlocks = blocks;
+
+      if (!blocks.length) {
+        setDocxStatus("No footnotes extracted (document may have none, or Word format is unusual).");
+        return;
+      }
+
+      setDocxStatus(`Extracted ${blocks.length} footnote(s) in document order.`);
+      useExtractedBtn.disabled = false;
+
+      // Optional transparency: fill paste box too
+      footnotesText.value = blocks.map((b, i) => `[${i + 1}] ${b}`).join("\n\n");
+      setStatus("Footnotes extracted into the Paste tab as well (optional). Now click “Use extracted & build table”.");
+    } catch (e) {
+      setDocxStatus("Extraction failed:\n\n" + (e?.message || String(e)));
+    }
+  });
+
+  useExtractedBtn.addEventListener("click", () => {
+    if (!extractedBlocks.length) { setStatus("No extracted blocks to use."); return; }
+    buildRowsFromBlocks(extractedBlocks);
+  });
+
+  // Actions
+  assignPullersBtn.addEventListener("click", () => {
+    const pullers = getPullers();
+    if (!pullers.length) { setStatus("Add at least one puller first."); return; }
+
+    const baseCount = rows.reduce((mx, r) => (r.baseIndex >= 0 ? Math.max(mx, r.baseIndex + 1) : mx), 0);
+    const baseToPuller = assignPullersToBaseFootnotes(baseCount, pullers);
+
+    for (const r of rows) {
+      if (r.baseIndex >= 0) r.puller = baseToPuller[r.baseIndex] || "";
+    }
+    renderTable();
+    setStatus("Pullers reassigned.");
+  });
+
+  markAllYesBtn.addEventListener("click", () => { rows.forEach(r => r.pulled = "Yes"); renderTable(); setStatus("All rows marked Yes."); });
+  markAllNoBtn.addEventListener("click", () => { rows.forEach(r => r.pulled = "No");  renderTable(); setStatus("All rows marked No."); });
+  clearPulledBtn.addEventListener("click", () => { rows.forEach(r => r.pulled = "");  renderTable(); setStatus("Pulled cleared."); });
+
+  exportXlsBtn.addEventListener("click", exportXlsHtml);
+  exportCsvBtn.addEventListener("click", exportCsv);
+  copyTsvBtn.addEventListener("click", copyTsv);
+
+  // Init
+  setMode("paste");
+  renderPullerTags();
+  syncActionButtons();
+  syncLocks();
+  setStatus("Step 1: add pullers (optional), paste footnotes (or upload .docx), then build your table.");
+})();
+</script>
+</body>
+</html>
