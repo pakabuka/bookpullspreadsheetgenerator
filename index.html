@@ -28,7 +28,13 @@ const $=id=>document.getElementById(id);
 const pullerTagWrap=$('pullerTagWrap'),pullerInput=$('pullerInput'),startNumber=$('startNumber'),assignMode=$('assignMode'),splitFootnotesMode=$('splitFootnotesMode'),splitSourcesMode=$('splitSourcesMode'),skipIdIbid=$('skipIdIbid'),defaultPulled=$('defaultPulled'),footnotesText=$('footnotesText'),docxFile=$('docxFile'),resultsTable=$('resultsTable'),resultsBody=$('resultsBody'),emptyHint=$('emptyHint');
 let pullerTags=[],rows=[],extractedBlocks=[],selectedFile=null,dirty=true,busy=false,loadVersion=0;
 const setStatus=message=>{$('status').textContent=message;};
-function updateAction(){ $('mainAction').disabled=busy; $('mainAction').textContent=busy?'Reading document…':dirty||!rows.length?'Build sheet':$('exportFormat').value==='tsv'?'Copy sheet':$('exportFormat').value==='csv'?'Download CSV':'Download Excel'; }
+function updateAction(){
+  const readyToExport=!dirty&&rows.length>0;
+  const needsPuller=readyToExport&&$('exportFormat').value==='xls';
+  const hasPuller=pullerTags.length>0||!!pullerInput.value.trim();
+  $('mainAction').disabled=busy||(needsPuller&&!hasPuller);
+  $('mainAction').textContent=busy?'Reading document…':dirty||!rows.length?'Build sheet':$('exportFormat').value==='tsv'?'Copy sheet':$('exportFormat').value==='csv'?'Download CSV':'Download Excel';
+}
   function normalizeNewlines(s) {
     return (s ?? "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
   }
@@ -107,7 +113,8 @@ function updateAction(){ $('mainAction').disabled=busy; $('mainAction').textCont
       x.addEventListener("click", () => {
         pullerTags.splice(i, 1);
         renderPullerTags();
-        if (rows.length) { renderTable(); setStatus("Names updated. Use More options to reassign existing rows."); }
+        updateAction();
+        if (rows.length) { applyPullersToRows(); setStatus(pullerTags.length ? "Pullers updated in the sheet." : "Puller assignments cleared."); }
       });
       chip.appendChild(x);
       pullerTagWrap.insertBefore(chip, pullerInput);
@@ -126,7 +133,8 @@ function updateAction(){ $('mainAction').disabled=busy; $('mainAction').textCont
     }
     if (added) {
       renderPullerTags();
-      if (rows.length) { renderTable(); setStatus("Names updated. Use More options to reassign existing rows."); }
+      updateAction();
+      if (rows.length) { applyPullersToRows(); setStatus("Pullers updated in the sheet."); }
     }
     return added;
   }
@@ -147,7 +155,8 @@ function updateAction(){ $('mainAction').disabled=busy; $('mainAction').textCont
       if (pullerTags.length) {
         pullerTags.pop();
         renderPullerTags();
-        if (rows.length) { renderTable(); setStatus("Names updated. Use More options to reassign existing rows."); }
+        updateAction();
+        if (rows.length) { applyPullersToRows(); setStatus(pullerTags.length ? "Pullers updated in the sheet." : "Puller assignments cleared."); }
       }
     }
   });
@@ -159,6 +168,7 @@ function updateAction(){ $('mainAction').disabled=busy; $('mainAction').textCont
       addPullersFromText(parts.join(","));
       pullerInput.value = last.trimStart();
     }
+    updateAction();
   });
 
   pullerInput.addEventListener("blur", () => {
@@ -871,8 +881,9 @@ $('mainAction').addEventListener('click',()=>{
  if(busy)return;
  commitPullerInput();
  if(dirty||!rows.length){build();return;}
+ applyPullersToRows();
  if($('exportFormat').value==='csv')exportCsv();else if($('exportFormat').value==='tsv')copyTsv();else exportXlsHtml();
- if($('exportFormat').value!=='tsv')setStatus('Sheet downloaded. Your edits are included.');
+ if($('exportFormat').value!=='tsv')setStatus('Sheet downloaded with current puller assignments.');
 });
 docxFile.addEventListener('change',()=>chooseFile(docxFile.files[0]));
 $('dropzone').addEventListener('dragover',e=>e.preventDefault());
@@ -881,13 +892,18 @@ footnotesText.addEventListener('input',()=>{++loadVersion;busy=false;selectedFil
 for(const el of [startNumber,splitFootnotesMode,splitSourcesMode,skipIdIbid,defaultPulled])el.addEventListener('change',markDirty);
 $('roundRobin').addEventListener('change',()=>{assignMode.value=$('roundRobin').checked?'roundrobin':'blocks';if(rows.length){reassign();}else updateAction();});
 $('exportFormat').addEventListener('change',updateAction);
-function reassign(){
- commitPullerInput();if(!rows.length){setStatus('Build a sheet first.');return;}
+function applyPullersToRows(){
+ if(!rows.length)return;
  const pullers=getPullers();
  const count=rows.reduce((mx,r)=>r.baseIndex>=0?Math.max(mx,r.baseIndex+1):mx,0);
  const assignments=assignPullersToBaseFootnotes(count,pullers);
  rows.forEach(r=>{if(r.baseIndex>=0)r.puller=assignments[r.baseIndex]||'';});
- renderTable();setStatus(pullers.length?'Pullers reassigned.':'Puller assignments cleared.');
+ renderTable();
+}
+function reassign(){
+ commitPullerInput();if(!rows.length){setStatus('Build a sheet first.');return;}
+ applyPullersToRows();
+ setStatus(getPullers().length?'Pullers reassigned.':'Puller assignments cleared.');
 }
 $('reassign').addEventListener('click',reassign);
 $('bulkStatus').addEventListener('change',e=>{if(e.target.value==='choose')return;rows.forEach(r=>r.pulled=e.target.value);renderTable();e.target.value='choose';setStatus(rows.length?'Pulled status updated.':'Build a sheet first.');});
