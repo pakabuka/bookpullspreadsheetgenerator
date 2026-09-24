@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bookpull</title>
 <style>
-:root{--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:var(--sans);--blue:#00356b;color:#253548;background:#f6f7f9;font-family:var(--sans)}*{box-sizing:border-box}body{margin:0}main{max-width:1180px;margin:56px auto;padding:0 24px}.intro,.inputCard{max-width:740px;margin-left:auto;margin-right:auto}h1{font:normal 36px Georgia,serif;color:var(--blue);margin:0 0 8px}p{font-size:14px;color:#6a7788;line-height:1.6;margin:0}.intro{margin-bottom:28px}.inputCard{background:white;border:1px solid #e1e6ed;border-radius:16px;padding:28px;box-shadow:0 8px 28px #20324705}label.field{display:block;font-size:12px;font-weight:600;color:#5c6c7f;margin:0 0 7px}textarea,input,select,button{font:inherit}textarea,input:not([type=checkbox]):not([type=file]),select{width:100%;border:1px solid #dbe2ea;border-radius:8px;padding:11px;color:#253548;background:white}textarea{resize:vertical;line-height:1.6}#footnotesText{min-height:140px;font-size:14px}.upload{position:relative;display:block;text-align:center;border:1px dashed #b6c5d8;border-radius:10px;background:#f9fbfe;color:var(--blue);padding:21px;margin:14px 0 24px;cursor:pointer;font-size:14px}.upload input{position:absolute;width:1px;height:1px;opacity:0}.upload small{display:block;color:#7b8797;font-size:11px;margin-top:6px}.tagInputWrap{border:1px solid #dbe2ea;border-radius:8px;padding:7px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-height:46px}.tagInputWrap .tagTextInput{border:0!important;width:auto!important;min-width:150px;flex:1;padding:5px!important;font-size:13px}.chip{display:inline-flex;gap:7px;align-items:center;border-radius:5px;padding:4px 8px;background:#edf2f8;color:var(--blue);font-size:12px}.chip button{background:none;border:0;color:#637a94;cursor:pointer;padding:0 3px;font-size:16px}.settings{display:flex;flex-wrap:wrap;gap:22px;margin:22px 0}.toggle{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}.toggle input{appearance:none;width:32px;height:19px;background:#cbd4df;position:relative;border-radius:12px;margin:0;flex-shrink:0;cursor:pointer}.toggle input:before{content:"";position:absolute;width:13px;height:13px;background:white;border-radius:50%;top:3px;left:3px;transition:transform .15s}.toggle input:checked{background:var(--blue)}.toggle input:checked:before{transform:translateX(13px)}.primary{width:100%;background:var(--blue);color:white;border:0;border-radius:8px;padding:14px;font-size:14px;font-weight:600;cursor:pointer}.primary:disabled{opacity:.5;cursor:wait}#status{font-size:12px;min-height:20px;margin-top:12px}.options{margin-top:18px;color:#6a7788;font-size:12px}summary{cursor:pointer;width:fit-content}details p{font-size:12px;margin-top:12px}.optionsGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.optionsGrid select,.optionsGrid input{font-size:12px}.optionsGrid label{font-size:11px}.textAction{border:0;background:none;color:var(--blue);padding:0;text-decoration:underline;cursor:pointer;font-size:12px}a{color:var(--blue)}.resultHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:#6a7788;font-size:12px}.resultHead h2{font-size:15px;color:#344960;margin:0;font-weight:600}#section3{margin-top:32px}.tableWrap{overflow:auto;border:1px solid #e1e6ed;border-radius:10px;background:white}table{width:100%;border-collapse:collapse;font-size:12px;min-width:1000px}th{text-align:left;padding:13px 12px;background:#f9fafc;color:#6a7788;font-size:11px;font-weight:600}td{vertical-align:top;padding:10px 8px;border-top:1px solid #e9edf2}td:first-child{padding:17px 12px;color:var(--blue)}.tableInput{background:transparent!important;border-color:transparent!important;padding:7px!important;border-radius:5px!important;font-size:12px}.tableInput:hover{border-color:#dbe2ea!important}.tableInput:focus{background:white!important}.urlCell{display:flex;align-items:center;gap:5px}.urlArrow{font-size:16px;text-decoration:none}.urlCount{font-size:10px;color:#8993a1}.row-yes{background:#eff8f3}.row-no{background:#fff4f2}#resultsBody textarea{min-width:290px}#resultsBody td:nth-child(3){min-width:180px}#resultsBody td:nth-child(4){min-width:85px}#resultsBody td:nth-child(5){min-width:130px}#resultsBody td:nth-child(6){min-width:170px}footer{text-align:center;font-size:11px;color:#8b95a3;margin:28px 0}input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible,.upload:focus-within{outline:3px solid #b5cde8;outline-offset:3px}[hidden]{display:none!important}@media(max-width:600px){main{margin:28px auto;padding:0 16px}.inputCard{padding:20px}h1{font-size:32px}.optionsGrid{grid-template-columns:1fr}.settings{gap:15px}.resultHead{align-items:flex-start;gap:12px}}
+:root{--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:var(--sans);--blue:#00356b;color:#253548;background:#f6f7f9;font-family:var(--sans)}*{box-sizing:border-box}body{margin:0}main{max-width:1180px;margin:56px auto;padding:0 24px}.intro,.inputCard{max-width:740px;margin-left:auto;margin-right:auto}h1{font:normal 36px Georgia,serif;color:var(--blue);margin:0 0 8px}p{font-size:14px;color:#6a7788;line-height:1.6;margin:0}.intro{margin-bottom:28px}.inputCard{background:white;border:1px solid #e1e6ed;border-radius:16px;padding:28px;box-shadow:0 8px 28px #20324705}label.field{display:block;font-size:12px;font-weight:600;color:#5c6c7f;margin:0 0 7px}textarea,input,select,button{font:inherit}textarea,input:not([type=checkbox]):not([type=file]),select{width:100%;border:1px solid #dbe2ea;border-radius:8px;padding:11px;color:#253548;background:white}textarea{resize:vertical;line-height:1.6}#footnotesText{min-height:140px;font-size:14px}.upload{position:relative;display:block;text-align:center;border:1px dashed #b6c5d8;border-radius:10px;background:#f9fbfe;color:var(--blue);padding:21px;margin:14px 0 24px;cursor:pointer;font-size:14px}.upload input{position:absolute;width:1px;height:1px;opacity:0}.upload small{display:block;color:#7b8797;font-size:11px;margin-top:6px}.tagInputWrap{border:1px solid #dbe2ea;border-radius:8px;padding:7px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-height:46px}.tagInputWrap .tagTextInput{border:0!important;width:auto!important;min-width:150px;flex:1;padding:5px!important;font-size:13px}.chip{display:inline-flex;gap:7px;align-items:center;border-radius:5px;padding:4px 8px;background:#edf2f8;color:var(--blue);font-size:12px}.chip button{background:none;border:0;color:#637a94;cursor:pointer;padding:0 3px;font-size:16px}.chip .levelBtn{font-size:10px;font-weight:600;border-radius:4px;padding:2px 6px;background:var(--blue);color:white}.chip.secondary{background:white;box-shadow:inset 0 0 0 1px #c7d3e1;color:#5c6c7f}.chip.secondary .levelBtn{background:#e3e9f1;color:#5c6c7f}.fieldHint{font-size:11px;color:#7b8797;margin-top:7px}.settings{display:flex;flex-wrap:wrap;gap:22px;margin:22px 0}.toggle{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}.toggle input{appearance:none;width:32px;height:19px;background:#cbd4df;position:relative;border-radius:12px;margin:0;flex-shrink:0;cursor:pointer}.toggle input:before{content:"";position:absolute;width:13px;height:13px;background:white;border-radius:50%;top:3px;left:3px;transition:transform .15s}.toggle input:checked{background:var(--blue)}.toggle input:checked:before{transform:translateX(13px)}.primary{width:100%;background:var(--blue);color:white;border:0;border-radius:8px;padding:14px;font-size:14px;font-weight:600;cursor:pointer}.primary:disabled{opacity:.5;cursor:wait}#status{font-size:12px;min-height:20px;margin-top:12px}.options{margin-top:18px;color:#6a7788;font-size:12px}summary{cursor:pointer;width:fit-content}details p{font-size:12px;margin-top:12px}.optionsGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.optionsGrid select,.optionsGrid input{font-size:12px}.optionsGrid label{font-size:11px}.textAction{border:0;background:none;color:var(--blue);padding:0;text-decoration:underline;cursor:pointer;font-size:12px}a{color:var(--blue)}.resultHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:#6a7788;font-size:12px}.resultHead h2{font-size:15px;color:#344960;margin:0;font-weight:600}#section3{margin-top:32px}.tableWrap{overflow:auto;border:1px solid #e1e6ed;border-radius:10px;background:white}table{width:100%;border-collapse:collapse;font-size:12px;min-width:1000px}th{text-align:left;padding:13px 12px;background:#f9fafc;color:#6a7788;font-size:11px;font-weight:600}td{vertical-align:top;padding:10px 8px;border-top:1px solid #e9edf2}td:first-child{padding:17px 12px;color:var(--blue)}.tableInput{background:transparent!important;border-color:transparent!important;padding:7px!important;border-radius:5px!important;font-size:12px}.tableInput:hover{border-color:#dbe2ea!important}.tableInput:focus{background:white!important}.urlCell{display:flex;align-items:center;gap:5px}.urlArrow{font-size:16px;text-decoration:none}.urlCount{font-size:10px;color:#8993a1}.row-yes{background:#eff8f3}.row-no{background:#fff4f2}#resultsBody textarea{min-width:290px}#resultsBody td:nth-child(3){min-width:180px}#resultsBody td:nth-child(4){min-width:85px}#resultsBody td:nth-child(5){min-width:130px}#resultsBody td:nth-child(6){min-width:170px}footer{text-align:center;font-size:11px;color:#8b95a3;margin:28px 0}input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible,.upload:focus-within{outline:3px solid #b5cde8;outline-offset:3px}[hidden]{display:none!important}@media(max-width:600px){main{margin:28px auto;padding:0 16px}.inputCard{padding:20px}h1{font-size:32px}.optionsGrid{grid-template-columns:1fr}.settings{gap:15px}.resultHead{align-items:flex-start;gap:12px}}
 </style></head><body><main>
 <header class="intro"><h1>Bookpull</h1><p>Turn footnotes into a source-pulling sheet.</p></header>
 <section class="inputCard">
 <label class="field" for="footnotesText">Footnotes</label><textarea id="footnotesText" placeholder="Paste your footnotes here…" spellcheck="false"></textarea>
 <label class="upload" id="dropzone"><input id="docxFile" type="file" accept=".docx"><span id="fileName">Or drop a Word document · browse</span><small>Footnotes extracted automatically</small></label>
-<label class="field" for="pullerInput">Pullers <span style="font-weight:normal">· optional</span></label><div id="pullerTagWrap" class="tagInputWrap"><input id="pullerInput" class="tagTextInput" placeholder="Names, separated by commas"></div>
+<label class="field" for="pullerInput">Pullers <span style="font-weight:normal">· optional</span></label><div id="pullerTagWrap" class="tagInputWrap"><input id="pullerInput" class="tagTextInput" placeholder="Names, separated by commas"></div><p class="fieldHint" id="interestHint">Tap P or S beside a name to mark primary or secondary interest. Primary pullers get more footnotes.</p>
 <div class="settings"><label class="toggle"><input id="skipIdIbid" type="checkbox" role="switch">Skip Id. / Ibid.</label><label class="toggle"><input id="roundRobin" type="checkbox" role="switch">Alternate pullers</label></div>
 <button id="mainAction" type="button" class="primary">Build sheet</button><p id="status" role="status" aria-live="polite">Paste footnotes or choose a document.</p>
 <details class="options"><summary>More options</summary><div class="optionsGrid">
@@ -16,8 +16,9 @@
 <div><label class="field" for="splitSourcesMode">Separate sources</label><select id="splitSourcesMode"><option value="smart">At semicolons</option><option value="aggressive">More detailed splitting</option></select></div>
 <div><label class="field" for="defaultPulled">Initial pulled status</label><select id="defaultPulled"><option value="">Blank</option><option>No</option><option>Yes</option><option>N/A</option></select></div>
 <div><label class="field" for="exportFormat">Download format</label><select id="exportFormat"><option value="xls">Excel (.xls)</option><option value="csv">CSV</option><option value="tsv">Copy to clipboard</option></select></div>
+<div><label class="field" for="primaryWeight">Primary interest gets</label><select id="primaryWeight"><option value="1.5">1.5× a secondary share</option><option value="2" selected>2× a secondary share</option><option value="3">3× a secondary share</option><option value="4">4× a secondary share</option></select></div>
 <div><label class="field" for="bulkStatus">Set all rows to</label><select id="bulkStatus"><option value="choose">Choose status…</option><option value="Yes">Pulled</option><option value="No">Not pulled</option><option value="N/A">N/A</option><option value="">Blank</option></select></div>
-</div><p><button id="reassign" class="textAction" type="button">Reassign pullers</button></p><p>Pullers are grouped by footnote unless “Alternate pullers” is on. Rebuilding replaces table edits.</p><p>Files stay in your browser. <a href="https://youtu.be/T5Z1NmRgmak" target="_blank" rel="noopener noreferrer">Tutorial</a></p></details>
+</div><p><button id="reassign" class="textAction" type="button">Reassign pullers</button></p><p>Pullers are grouped by footnote unless “Alternate pullers” is on. Primary-interest pullers get a larger share; secondary get a smaller one. Rebuilding replaces table edits.</p><p>Files stay in your browser. <a href="https://youtu.be/T5Z1NmRgmak" target="_blank" rel="noopener noreferrer">Tutorial</a></p></details>
 <select id="assignMode" hidden><option value="blocks">Blocks</option><option value="roundrobin">Round robin</option></select>
 </section>
 <section id="section3" hidden><div class="resultHead"><h2>Your sheet <span id="rowCount" style="font-weight:normal;color:#7b8797"></span></h2><span>Click any field to edit</span></div><div class="tableWrap"><table id="resultsTable"><thead><tr><th>Footnote</th><th>Citation</th><th>URL</th><th>Pulled</th><th>Puller</th><th>Notes</th></tr></thead><tbody id="resultsBody"></tbody></table></div><p id="emptyHint" hidden></p></section>
@@ -26,7 +27,7 @@
 "use strict";
 const $=id=>document.getElementById(id);
 const pullerTagWrap=$('pullerTagWrap'),pullerInput=$('pullerInput'),startNumber=$('startNumber'),assignMode=$('assignMode'),splitFootnotesMode=$('splitFootnotesMode'),splitSourcesMode=$('splitSourcesMode'),skipIdIbid=$('skipIdIbid'),defaultPulled=$('defaultPulled'),footnotesText=$('footnotesText'),docxFile=$('docxFile'),resultsTable=$('resultsTable'),resultsBody=$('resultsBody'),emptyHint=$('emptyHint');
-let pullerTags=[],rows=[],extractedBlocks=[],selectedFile=null,dirty=true,busy=false,loadVersion=0;
+let pullerTags=[],pullerLevels=new Map(),rows=[],extractedBlocks=[],selectedFile=null,dirty=true,busy=false,loadVersion=0;
 const setStatus=message=>{$('status').textContent=message;};
 function updateAction(){
   const readyToExport=!dirty&&rows.length>0;
@@ -82,6 +83,34 @@ function updateAction(){
 
   // --- Puller tags logic ---
   function getPullers() { return [...pullerTags]; }
+  function pullerLevel(name) { return pullerLevels.get((name ?? "").toLowerCase()) || "primary"; }
+  function pullerWeight(name) {
+    const w = Number($('primaryWeight').value) || 2;
+    return pullerLevel(name) === "secondary" ? 1 : w;
+  }
+  // How many footnotes each puller should get, proportional to weight (largest remainder).
+  function pullerQuotas(total, pullers) {
+    const weights = pullers.map(pullerWeight);
+    const sum = weights.reduce((a, b) => a + b, 0);
+    const exact = weights.map(w => total * w / sum);
+    const quotas = exact.map(Math.floor);
+    let left = total - quotas.reduce((a, b) => a + b, 0);
+    const order = exact.map((e, i) => [e - Math.floor(e), weights[i], -i, i])
+      .sort((a, b) => b[0] - a[0] || b[1] - a[1] || b[2] - a[2]);
+    for (let k = 0; left > 0; k++, left--) quotas[order[k % order.length][3]]++;
+    return quotas;
+  }
+  function distributionSummary() {
+    const counts = new Map();
+    const seen = new Set();
+    for (const r of rows) {
+      if (r.baseIndex < 0 || !r.puller || seen.has(r.baseIndex)) continue;
+      seen.add(r.baseIndex);
+      counts.set(r.puller, (counts.get(r.puller) || 0) + 1);
+    }
+    if (!counts.size) return "";
+    return "Footnotes per puller: " + getPullers().map(p => `${p} ${counts.get(p) || 0}`).join(", ") + ".";
+  }
   function canonicalName(s) { return (s ?? "").trim().replace(/\s+/g, " "); }
   function hasPuller(name) {
     const lower = name.toLowerCase();
@@ -104,13 +133,30 @@ function updateAction(){
     for (let i = 0; i < pullerTags.length; i++) {
       const name = pullerTags[i];
       const chip = document.createElement("span");
-      chip.className = "chip";
-      chip.innerHTML = `<span>${escapeHtml(name)}</span>`;
+      const level = pullerLevel(name);
+      chip.className = "chip" + (level === "secondary" ? " secondary" : "");
+      const lv = document.createElement("button");
+      lv.type = "button";
+      lv.className = "levelBtn";
+      lv.textContent = level === "secondary" ? "S" : "P";
+      lv.title = level === "secondary" ? "Secondary interest (click for primary)" : "Primary interest (click for secondary)";
+      lv.setAttribute("aria-label", `${name}: ${level} interest. Switch to ${level === "secondary" ? "primary" : "secondary"}`);
+      lv.addEventListener("click", (e) => {
+        e.stopPropagation();
+        pullerLevels.set(name.toLowerCase(), level === "secondary" ? "primary" : "secondary");
+        renderPullerTags();
+        if (rows.length) { applyPullersToRows(); setStatus("Interest updated. " + distributionSummary()); }
+      });
+      chip.appendChild(lv);
+      const nm = document.createElement("span");
+      nm.textContent = name;
+      chip.appendChild(nm);
       const x = document.createElement("button");
       x.type = "button";
       x.setAttribute("aria-label", `Remove ${name}`);
       x.textContent = "×";
       x.addEventListener("click", () => {
+        pullerLevels.delete(name.toLowerCase());
         pullerTags.splice(i, 1);
         renderPullerTags();
         updateAction();
@@ -153,7 +199,8 @@ function updateAction(){
     }
     if (e.key === "Backspace" && !pullerInput.value) {
       if (pullerTags.length) {
-        pullerTags.pop();
+        const removed = pullerTags.pop();
+        pullerLevels.delete(removed.toLowerCase());
         renderPullerTags();
         updateAction();
         if (rows.length) { applyPullersToRows(); setStatus(pullerTags.length ? "Pullers updated in the sheet." : "Puller assignments cleared."); }
@@ -324,17 +371,27 @@ function updateAction(){
     const out = new Array(baseCount).fill("");
     if (!pullers.length || baseCount <= 0) return out;
 
-    // blocks: contiguous assignments
+    const quotas = pullerQuotas(baseCount, pullers);
+
+    // blocks: contiguous runs sized by interest
     if (assignMode.value === "blocks") {
-      for (let i = 0; i < baseCount; i++) {
-        const p = Math.floor(i * pullers.length / baseCount);
-        out[i] = pullers[Math.min(p, pullers.length - 1)];
-      }
+      let i = 0;
+      pullers.forEach((p, k) => { for (let n = 0; n < quotas[k]; n++) out[i++] = p; });
       return out;
     }
 
-    // roundrobin: dispersed
-    for (let i = 0; i < baseCount; i++) out[i] = pullers[i % pullers.length];
+    // roundrobin: dispersed, but primary pullers come up more often
+    const given = new Array(pullers.length).fill(0);
+    for (let i = 0; i < baseCount; i++) {
+      let best = -1, bestLag = -Infinity;
+      for (let k = 0; k < pullers.length; k++) {
+        if (given[k] >= quotas[k]) continue;
+        const lag = quotas[k] * (i + 1) / baseCount - given[k];
+        if (lag > bestLag + 1e-9) { best = k; bestLag = lag; }
+      }
+      given[best]++;
+      out[i] = pullers[best];
+    }
     return out;
   }
 
@@ -426,7 +483,7 @@ function updateAction(){
     syncActionButtons();
     syncLocks();
 
-    setStatus(`${rows.length} sources ready. Edit the table, then download.`);
+    setStatus(`${rows.length} sources ready. Edit the table, then download.` + (pullers.length ? " " + distributionSummary() : ""));
   }
 
   // -------- Table rendering --------
@@ -892,6 +949,7 @@ footnotesText.addEventListener('input',()=>{++loadVersion;busy=false;selectedFil
 for(const el of [startNumber,splitFootnotesMode,splitSourcesMode,skipIdIbid,defaultPulled])el.addEventListener('change',markDirty);
 $('roundRobin').addEventListener('change',()=>{assignMode.value=$('roundRobin').checked?'roundrobin':'blocks';if(rows.length){reassign();}else updateAction();});
 $('exportFormat').addEventListener('change',updateAction);
+$('primaryWeight').addEventListener('change',()=>{if(rows.length){applyPullersToRows();setStatus('Shares updated. '+distributionSummary());}});
 function applyPullersToRows(){
  if(!rows.length)return;
  const pullers=getPullers();
@@ -903,7 +961,7 @@ function applyPullersToRows(){
 function reassign(){
  commitPullerInput();if(!rows.length){setStatus('Build a sheet first.');return;}
  applyPullersToRows();
- setStatus(getPullers().length?'Pullers reassigned.':'Puller assignments cleared.');
+ setStatus(getPullers().length?'Pullers reassigned. '+distributionSummary():'Puller assignments cleared.');
 }
 $('reassign').addEventListener('click',reassign);
 $('bulkStatus').addEventListener('change',e=>{if(e.target.value==='choose')return;rows.forEach(r=>r.pulled=e.target.value);renderTable();e.target.value='choose';setStatus(rows.length?'Pulled status updated.':'Build a sheet first.');});
